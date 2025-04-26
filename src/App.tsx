@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled, { ThemeProvider, keyframes } from "styled-components";
 import { WebSocketService } from "./api/websocketService";
-import { theme } from "./theme";
 import { GlobalStyle } from "./GlobalStyle";
+import { theme } from "./theme";
 
 // Animations
 const fadeIn = keyframes`
@@ -38,7 +38,7 @@ const ContentContainer = styled.div`
 const AppTitle = styled.h1`
   font-size: 3rem;
   font-weight: 700;
-  color: ${props => props.theme.colors.primary};
+  color: ${(props) => props.theme.colors.primary};
   text-align: center;
   margin: 0;
   letter-spacing: 2px;
@@ -51,7 +51,7 @@ const Card = styled.div`
   padding: 24px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
-  
+
   &:hover {
     transform: translateY(-3px);
     box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
@@ -59,7 +59,7 @@ const Card = styled.div`
 `;
 
 const CardTitle = styled.h2`
-  color: ${props => props.theme.colors.primary};
+  color: ${(props) => props.theme.colors.primary};
   font-size: 1.5rem;
   margin-top: 0;
   margin-bottom: 16px;
@@ -75,7 +75,7 @@ const Label = styled.label`
   display: block;
   margin-bottom: 6px;
   font-size: 0.9rem;
-  color: ${props => props.theme.colors.text};
+  color: ${(props) => props.theme.colors.text};
   text-align: left;
   opacity: 0.9;
 `;
@@ -86,16 +86,16 @@ const Input = styled.input`
   border-radius: 8px;
   border: 1px solid rgba(100, 100, 100, 0.3);
   background: rgba(30, 30, 30, 0.6);
-  color: ${props => props.theme.colors.text};
+  color: ${(props) => props.theme.colors.text};
   font-size: 1rem;
   outline: none;
   transition: all 0.2s ease;
-  
+
   &:focus {
-    border-color: ${props => props.theme.colors.primary};
+    border-color: ${(props) => props.theme.colors.primary};
     box-shadow: 0 0 0 2px rgba(143, 86, 207, 0.3);
   }
-  
+
   &::placeholder {
     color: rgba(200, 200, 200, 0.5);
   }
@@ -105,7 +105,7 @@ const SubmitButton = styled.button`
   width: 100%;
   padding: 12px;
   border-radius: 8px;
-  background: ${props => props.theme.colors.primary};
+  background: ${(props) => props.theme.colors.primary};
   color: white;
   font-weight: 600;
   font-size: 1rem;
@@ -114,16 +114,16 @@ const SubmitButton = styled.button`
   transition: all 0.2s ease;
   margin-top: 8px;
   animation: ${pulse} 2s infinite;
-  
+
   &:hover {
-    background: ${props => props.theme.colors.accent};
+    background: ${(props) => props.theme.colors.accent};
     transform: translateY(-2px);
   }
-  
+
   &:active {
     transform: translateY(1px);
   }
-  
+
   &:disabled {
     background: #555;
     cursor: not-allowed;
@@ -145,43 +145,43 @@ const StatusIndicator = styled.span`
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background-color: ${props => props.connected ? "#4de680" : "#ff5555"};
+  background-color: ${(props) => (props.connected ? "#4de680" : "#ff5555")};
 `;
 
 const StatusText = styled.span`
-  color: ${props => props.connected ? "#4de680" : "#ff5555"};
+  color: ${(props) => (props.connected ? "#4de680" : "#ff5555")};
 `;
 
 const ContributionsList = styled.div`
   max-height: 300px;
   overflow-y: auto;
-  
+
   /* Custom scrollbar */
   &::-webkit-scrollbar {
     width: 6px;
   }
-  
+
   &::-webkit-scrollbar-track {
     background: rgba(30, 30, 30, 0.4);
     border-radius: 10px;
   }
-  
+
   &::-webkit-scrollbar-thumb {
-    background: ${props => props.theme.colors.primary};
+    background: ${(props) => props.theme.colors.primary};
     border-radius: 10px;
   }
 `;
 
 const ContributionItem = styled.div`
   background: rgba(60, 60, 60, 0.5);
-  border-left: 3px solid ${props => props.theme.colors.primary};
+  border-left: 3px solid ${(props) => props.theme.colors.primary};
   padding: 12px 16px;
   border-radius: 6px;
   margin-bottom: 12px;
   animation: ${fadeIn} 0.3s ease-out;
   display: flex;
   justify-content: space-between;
-  
+
   &:last-child {
     margin-bottom: 0;
   }
@@ -189,7 +189,7 @@ const ContributionItem = styled.div`
 
 const UserName = styled.span`
   font-weight: 600;
-  color: ${props => props.theme.colors.accent};
+  color: ${(props) => props.theme.colors.accent};
 `;
 
 const BalanceAmount = styled.span`
@@ -207,7 +207,7 @@ const EmptyState = styled.div`
 const Badge = styled.div`
   display: inline-block;
   background: rgba(143, 86, 207, 0.2);
-  color: ${props => props.theme.colors.primary};
+  color: ${(props) => props.theme.colors.primary};
   border-radius: 16px;
   padding: 3px 10px;
   font-size: 0.8rem;
@@ -225,46 +225,47 @@ const App = () => {
   useEffect(() => {
     // Create WebSocket service instance
     webSocketServiceRef.current = new WebSocketService();
-    
+
     // Callbacks para eventos de conexión
     const handleConnectionOpen = () => {
       console.log("Connection established callback");
       setIsConnected(true);
     };
-    
+
     const handleConnectionClose = () => {
       console.log("Connection closed callback");
       setIsConnected(false);
     };
-    
+
     const handleConnectionError = () => {
       console.log("Connection error callback");
       setIsConnected(false);
     };
-    
+
     // Connect to WebSocket and handle messages
     webSocketServiceRef.current.connect(
       // Callback para mensajes
       (data) => {
         console.log("Mensaje recibido:", data);
-        
+
         // Procesamiento de mensajes
-        if (data && typeof data === 'object') {
+        if (data && typeof data === "object") {
           if (data.type === 1) {
             // Mensaje de conexión
             console.log("Conexión SignalR confirmada");
             setIsConnected(true);
-          } 
-          else if (data.target === 'ReceiveContribution' && data.arguments && data.arguments.length > 0) {
+          } else if (
+            data.target === "ReceiveContribution" &&
+            data.arguments &&
+            data.arguments.length > 0
+          ) {
             // Mensaje de contribución
             console.log("Contribución recibida:", data.arguments[0]);
             setMessages((prevMessages) => [data.arguments[0], ...prevMessages]);
-          }
-          else if (Array.isArray(data)) {
+          } else if (Array.isArray(data)) {
             // Array de mensajes
             setMessages((prevMessages) => [...data, ...prevMessages]);
-          } 
-          else if (data.UserName && data.Balance !== undefined) {
+          } else if (data.UserName && data.Balance !== undefined) {
             // Objeto directo de contribución
             console.log("Objeto de contribución recibido:", data);
             setMessages((prevMessages) => [data, ...prevMessages]);
@@ -286,25 +287,27 @@ const App = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     if (!userName.trim() || balance <= 0 || !isConnected) return;
-    
+
     setIsSubmitting(true);
-    
+
     // Formato exacto que requiere el backend
-    const message = { 
-      "type": 1,
-      "target": "SendContribution", 
-      "arguments": [{
-        "UserName": userName.trim(),
-        "Balance": parseFloat(balance)
-      }]
+    const message = {
+      type: 1,
+      target: "SendContribution",
+      arguments: [
+        {
+          UserName: userName.trim(),
+          Balance: parseFloat(balance),
+        },
+      ],
     };
 
     try {
       console.log("Enviando mensaje:", message);
-      webSocketServiceRef.current.sendMessage(message + '');
-      
+      webSocketServiceRef.current.sendMessage(JSON.stringify(message) + "");
+
       // Limpiar el formulario
       setUserName("");
       setBalance(0);
@@ -316,10 +319,10 @@ const App = () => {
   };
 
   const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('es-ES', {
-      style: 'currency',
-      currency: 'EUR',
-      minimumFractionDigits: 2
+    return new Intl.NumberFormat("es-ES", {
+      style: "currency",
+      currency: "EUR",
+      minimumFractionDigits: 2,
     }).format(amount);
   };
 
@@ -330,34 +333,41 @@ const App = () => {
     if (webSocketServiceRef.current) {
       webSocketServiceRef.current.disconnect();
     }
-    
+
     webSocketServiceRef.current = new WebSocketService();
-    
+
     const handleConnectionOpen = () => {
       console.log("Reconnection established");
       setIsConnected(true);
     };
-    
+
     const handleConnectionClose = () => {
       console.log("Reconnection closed");
       setIsConnected(false);
     };
-    
+
     const handleConnectionError = () => {
       console.log("Reconnection error");
       setIsConnected(false);
     };
-    
+
     webSocketServiceRef.current.connect(
       (data) => {
         console.log("Mensaje recibido en reconexión:", data);
-        
-        if (data && typeof data === 'object') {
+
+        if (data && typeof data === "object") {
           if (data.type === 1) {
             console.log("Conexión SignalR confirmada en reconexión");
             setIsConnected(true);
-          } else if (data.target === 'ReceiveContribution' && data.arguments && data.arguments.length > 0) {
-            console.log("Contribución recibida en reconexión:", data.arguments[0]);
+          } else if (
+            data.target === "ReceiveContribution" &&
+            data.arguments &&
+            data.arguments.length > 0
+          ) {
+            console.log(
+              "Contribución recibida en reconexión:",
+              data.arguments[0]
+            );
             setMessages((prevMessages) => [data.arguments[0], ...prevMessages]);
           } else if (Array.isArray(data)) {
             setMessages((prevMessages) => [...data, ...prevMessages]);
@@ -379,7 +389,7 @@ const App = () => {
       <AppContainer>
         <ContentContainer>
           <AppTitle>Collecto</AppTitle>
-          
+
           <Card>
             <CardTitle>Enviar datos</CardTitle>
             <form onSubmit={handleSubmit}>
@@ -394,7 +404,7 @@ const App = () => {
                   required
                 />
               </FormGroup>
-              
+
               <FormGroup>
                 <Label htmlFor="balance">Balance</Label>
                 <Input
@@ -408,47 +418,43 @@ const App = () => {
                   required
                 />
               </FormGroup>
-              
-              <SubmitButton 
-                type="submit" 
-                disabled={!isFormValid || !isConnected || isSubmitting}
-              >
+
+              <SubmitButton
+                type="submit"
+                disabled={!isFormValid || !isConnected || isSubmitting}>
                 {isSubmitting ? "Enviando..." : "Enviar"}
               </SubmitButton>
             </form>
-            
+
             <ConnectionStatus>
               <StatusIndicator connected={isConnected} />
               <StatusText connected={isConnected}>
                 {isConnected ? "Conectado" : "Desconectado"}
               </StatusText>
               {!isConnected && (
-                <button 
+                <button
                   onClick={handleReconnect}
-                  style={{ 
-                    marginLeft: '10px', 
-                    background: 'transparent', 
-                    border: '1px solid #ff5555',
-                    borderRadius: '4px',
-                    color: '#ff5555',
-                    padding: '2px 8px',
-                    cursor: 'pointer'
-                  }}
-                >
+                  style={{
+                    marginLeft: "10px",
+                    background: "transparent",
+                    border: "1px solid #ff5555",
+                    borderRadius: "4px",
+                    color: "#ff5555",
+                    padding: "2px 8px",
+                    cursor: "pointer",
+                  }}>
                   Reconectar
                 </button>
               )}
             </ConnectionStatus>
           </Card>
-          
+
           <Card>
             <CardTitle>
               Contribuciones
-              {messages.length > 0 && (
-                <Badge>{messages.length}</Badge>
-              )}
+              {messages.length > 0 && <Badge>{messages.length}</Badge>}
             </CardTitle>
-            
+
             <ContributionsList>
               {messages.length === 0 ? (
                 <EmptyState>
