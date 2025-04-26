@@ -1,0 +1,24 @@
+
+name: Create release
+
+on:
+  push:
+    branches: ["master"]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: shinso-raven/collecto-front
+
+jobs:
+  publish:
+    name: publish image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Login
+        run: |
+          echo ${{ secrets.PAT }} | docker login ghcr.io -u shinso-raven --password-stdin
+      - name: Build and Publish Backend
+        run: |
+          docker build ./CollectoWebSockets --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest 
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest

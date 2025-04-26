@@ -15,19 +15,19 @@ export class WebSocketService {
     this.onOpenCallback = onOpen;
     this.onCloseCallback = onClose;
     this.onErrorCallback = onError;
-    
+
     try {
       this.socket = new WebSocket(WEBSOCKET_URL);
 
       // Handle connection open
       this.socket.onopen = (event) => {
         console.log("WebSocket connection established", event);
-        
+
         // Send the handshake message required by SignalR
-        const handshake = '{ protocol: "json", version: 1 }';
+        const handshake = '{ "protocol": "json", "version": 1 }';
         this.socket?.send(handshake);
         console.log("Handshake sent:", handshake);
-        
+
         // Call the custom open callback
         this.onOpenCallback();
       };
@@ -40,16 +40,16 @@ export class WebSocketService {
             console.log("Empty message received (likely a handshake ACK)");
             return;
           }
-          
+
           const data = JSON.parse(event.data);
           console.log("Message received:", data);
-          
+
           // Check for SignalR ping messages
           if (data.type === 6) {
             console.log("Received ping message from server");
             return;
           }
-          
+
           onMessage(data);
         } catch (error) {
           console.error("Error parsing message:", error, event.data);
@@ -79,7 +79,10 @@ export class WebSocketService {
       this.socket.send(messageStr);
       console.log("Message sent:", messageStr);
     } else {
-      console.error("WebSocket is not open. Current state:", this.socket?.readyState);
+      console.error(
+        "WebSocket is not open. Current state:",
+        this.socket?.readyState
+      );
       throw new Error("WebSocket is not open");
     }
   }
