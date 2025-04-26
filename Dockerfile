@@ -10,6 +10,6 @@ COPY . .
 
 ENV TS_NODE_TRANSPILE_ONLY=true
 
-EXPOSE 3000
+EXPOSE 5173
 
 CMD ["npm", "run", "dev"]
