@@ -1,4 +1,5 @@
-const WEBSOCKET_URL = "ws://localhost:5072/contributionHub"; // Update to your actual WebSocket URL
+const WEBSOCKET_URL =
+  "ws://a3fa2db081a384355a34524044689663-865287451.us-east-1.elb.amazonaws.com/contributionHub"; // Update to your actual WebSocket URL
 
 export class WebSocketService {
   private socket: WebSocket | null = null;
